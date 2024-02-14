@@ -1,2 +1,12 @@
 ---
-# tasks file for cat_printer
+- name: "Defining the Quadlet Service"
+  ansible.builtin.set_fact:
+    __service_name: cat-printer
+
+- name: "Installing Quadlet Template {{ __service_name | capitalize }}"
+  ansible.builtin.template:
+    src: cat-printer.container.j2
+    dest: "{{ __cat_printer_quadlet_container }}"
+  notify:
+    - daemon-reload
+    - quadlet-restart

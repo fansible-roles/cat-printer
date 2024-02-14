@@ -1,2 +1,7 @@
 ---
-# vars file for cat_printer
+# define the systemD directory for quadlet files
+__cat_printer_unit_path: "/usr/share/containers/systemd/"
+
+# define the quadlet container file
+__cat_printer_quadlet_container:
+  "{{ __cat_printer_unit_path }}cat-printer.container"
