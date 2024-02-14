@@ -1,0 +1,28 @@
+---
+provisioner:
+  name: ansible
+  config_options:
+    defaults:
+      collections_path: $HOME/.ansible/collections
+      callbacks_enabled: ansible.posix.profile_tasks,ansible.posix.timer
+driver:
+  name: podman
+platforms:
+  - name: cat_printer_pinp
+    image: quay.io/podman/stable
+    pre_build_image: true
+    command: /sbin/init
+    tmpfs:
+      - /run
+      - /tmp
+    volumes:
+      - /sys/fs/cgroup:/sys/fs/cgroup:ro
+      - ~/dev:/tmp/test
+      - /run/dbus:/run/dbus
+    devices:
+      - /dev/fuse
+      - /dev/usb/:/dev/usb
+    security_opts:
+      - unmask=ALL
+      - label=disable
+    privileged: true
