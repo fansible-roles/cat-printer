@@ -1,0 +1,27 @@
+# Cat-Printer Quadlet Container
+[Unit]
+Description=Manage the Cat Pinter Service
+After=network.target
+
+[Container]
+ContainerName=cat-printer
+LogDriver=journald
+Unmask=ALL
+#UserNS=keep-id
+Image={{ cat_printer_quadlet.image }}:{{ cat_printer_quadlet.tag }}
+{% for key, value in cat_printer_environment.items() %}
+Environment={{ key }}={{ value }}
+{% endfor %}
+{% for vol in cat_printer_volumes %}
+Volume={{ vol.path }}:{{ vol.dest }}
+{% endfor %}
+{% for port in cat_printer_quadlet_ports %}
+PublishPort={{ port.hostPort }}:{{ port.containerPort }}/{{ port.proto }}
+{% endfor %}
+{% for dev in cat_printer_quadlet_devices %}
+AddDevice={{ dev.path }}
+{% endfor %}
+
+[Install]
+# Start by default on boot
+WantedBy=network.target multi-user.target default.target

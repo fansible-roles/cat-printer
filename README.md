@@ -1,38 +1,79 @@
-Role Name
+cat_printer
 =========
 
-A brief description of the role goes here.
+Deploy [Cat-Printer](https://github.com/NaitLee/Cat-Printer) as a [Podman Quadlet](https://github.com/containers/quadlet) container.  
+
+Cat Printer is a web app daemon that allows communitcation with thermal printers
+via bluetooth. The container must have access to the bluetooth device, which by
+default will on `/dev/usb/hiddev0`. It's possible to adjust the device by
+changing the variable `cat_printer_quadlet_devices`.   
+This quadlet, by default will run as rootfull.  
 
 Requirements
 ------------
 
-Any pre-requisites that may not be covered by Ansible itself or the role should be mentioned here. For instance, if the role uses the EC2 module, it may be a good idea to mention in this section that the boto package is required.
+* `podman` - version `4.7.2+`  
 
 Role Variables
 --------------
 
-A description of the settable variables for this role should go here, including any variables that are in defaults/main.yml, vars/main.yml, and any variables that can/should be set via parameters to the role. Any variables that are read from other roles and/or the global scope (ie. hostvars, group vars, etc.) should be mentioned here as well.
+* `cat_printer_quadlet`: (`dict`) - Define the Container image and tag  
+* `cat_printer_environment`: (`dict`) - Define the environment variables  
+* `cat_printer_volumes`: (`list`) - A list of paths to be mounted  
+* `cat_printer_quadlet_ports`: (`list`) - A list of ports to be exposed   
+* `cat_printer_quadlet_devices`: (`list`) - A list of devices to bind in the
+  container. (default: `/dev/usb/hiddev0` will be mounted)
 
 Dependencies
 ------------
 
-A list of other roles hosted on Galaxy should go here, plus any details in regards to parameters that may need to be set for other roles, or variables that are used from other roles.
+None
 
 Example Playbook
 ----------------
 
-Including an example of how to use your role (for instance, with variables passed in as parameters) is always nice for users too:
+* Deploy using default seetings:  
 
-    - hosts: servers
-      roles:
-         - { role: username.rolename, x: 42 }
+```yaml
+---
+- name: Deploy Cat Printer Quadlet
+  hosts: all
+  gather_facts: false
+  cat_printer_quadlet_devices:
+    - name: usb
+      path: /dev/usb/hiddev1
+  roles:
+    - role: cat_printer
+```
+
+Developing and Testing
+----------------------
+
+This role was developed using [ansible
+molecule](https://ansible.readthedocs.io/projects/molecule/).
+The use of molecule is optional but recommended.  
+  
+* Testing:  
+Unit tests for checking code regression are available in the [`tests` directory](tests/).
+use the `verify` or `test` commands, e.g:  
+
+```bash
+molecule test
+```
+
+while developing use `verify` instead:  
+
+```bash
+molecule create
+molecule verify
+```
 
 License
 -------
 
-BSD
+[GPL-2.0-or-later](https://spdx.org/licenses/GPL-2.0-or-later.html)
 
 Author Information
 ------------------
 
-An optional section for the role authors to include contact information, or a website (HTML is not allowed).
+@mrbrandao - Igor Brandão

@@ -1,2 +1,22 @@
 ---
-# defaults file for cat_printer
+# define container image seetings
+cat_printer_quadlet:
+  image: "ghcr.io/mrbrandao/cat-printer"
+  tag: "v0.1.0"
+
+cat_printer_environment:
+  TZ: "Etc/UTC"
+
+cat_printer_volumes:
+  - name: dbus
+    path: /run/dbus
+    dest: /run/dbus
+
+cat_printer_quadlet_ports:
+  - hostPort: '8095'
+    containerPort: '8095'
+    proto: tcp
+
+cat_printer_quadlet_devices:
+  - name: usb
+    path: /dev/usb/hiddev0
