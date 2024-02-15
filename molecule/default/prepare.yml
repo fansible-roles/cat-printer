@@ -1,0 +1,15 @@
+---
+- name: Prepare
+  hosts: all
+  gather_facts: false
+
+  pre_tasks:
+    - name: Installing Packages
+      ansible.builtin.dnf:
+        name:
+          - sudo
+
+    - name: Adding user
+      ansible.builtin.user:
+        name: catprinter
+        state: present

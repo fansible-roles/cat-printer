@@ -17,8 +17,9 @@ platforms:
       - /tmp
     volumes:
       - /sys/fs/cgroup:/sys/fs/cgroup:ro
-      - ~/dev:/tmp/test
-      - /run/dbus:/run/dbus
+    capabilities:
+      - SYS_ADMIN
+      - MKNOD
     devices:
       - /dev/fuse
       - /dev/usb/:/dev/usb
@@ -26,3 +27,5 @@ platforms:
       - unmask=ALL
       - label=disable
     privileged: true
+    # extra_opts:
+    #  - --userns=keep-id

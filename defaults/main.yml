@@ -17,6 +17,14 @@ cat_printer_quadlet_ports:
     containerPort: '8095'
     proto: tcp
 
+# will try to autodect the bluetooth and bind it
+cat_printer_autodetect_bluetooth: false
+
 cat_printer_quadlet_devices:
   - name: usb
     path: /dev/usb/hiddev0
+    enable: false
+
+cat_printer_dependecies:
+  - bluez
+  - usbutils

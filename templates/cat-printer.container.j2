@@ -7,6 +7,7 @@ After=network.target
 ContainerName=cat-printer
 LogDriver=journald
 Unmask=ALL
+SecurityLabelDisable=true
 #UserNS=keep-id
 Image={{ cat_printer_quadlet.image }}:{{ cat_printer_quadlet.tag }}
 {% for key, value in cat_printer_environment.items() %}
@@ -19,8 +20,13 @@ Volume={{ vol.path }}:{{ vol.dest }}
 PublishPort={{ port.hostPort }}:{{ port.containerPort }}/{{ port.proto }}
 {% endfor %}
 {% for dev in cat_printer_quadlet_devices %}
+{% if dev.enable %}
 AddDevice={{ dev.path }}
+{% endif %}
 {% endfor %}
+{% if cat_printer_autodetect_bluetooth and __cat_printer_autodetected.stdout != '' %}
+AddDevice={{ __cat_printer_autodetected.stdout }}
+{% endif %}
 
 [Install]
 # Start by default on boot

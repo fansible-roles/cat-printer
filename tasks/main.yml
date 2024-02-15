@@ -3,6 +3,25 @@
   ansible.builtin.set_fact:
     __service_name: cat-printer
 
+- name: "Installing Packages Dependencies"
+  ansible.builtin.package:
+    name: "{{ cat_printer_dependecies }}"
+    state: present
+  register: __cat_printer_deps
+
+- name: "Starting and Enabling Bluetooth"
+  ansible.builtin.service:
+    name: bluetooth
+    state: restarted
+    enabled: true
+  when: __cat_printer_deps.changed | bool
+
+- name: "Autodetecting Bluetooth Device"
+  ansible.builtin.shell:
+    cmd: lsusb |grep -i bluetooth|awk -F':' '{print $1}'|
+      awk '{print "/dev/bus/usb/" $2 "/" $4}'
+  register: __cat_printer_autodetected
+
 - name: "Installing Quadlet Template {{ __service_name | capitalize }}"
   ansible.builtin.template:
     src: cat-printer.container.j2
